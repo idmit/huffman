@@ -7,12 +7,16 @@
 //
 
 #include <stdio.h>
+#include <stdlib.h>
+#include "io.h"
 
 int main(int argc, const char * argv[])
 {
-
-    // insert code here...
-    printf("Hello, World!\n");
+    Argument *indicator = NULL;
+    
+    indicator = (Argument *)malloc((argc - 1) * sizeof(int));
+    
+    printf("%d", parseGArgs(argc, argv, indicator));
     return 0;
 }
 
