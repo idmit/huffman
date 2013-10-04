@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "io.h"
+#include "util.h"
 
 int main(int argc, const char * argv[])
 {
@@ -16,7 +17,8 @@ int main(int argc, const char * argv[])
     
     indicator = (Argument *)malloc((argc - 1) * sizeof(int));
     
-    printf("%d", parseGArgs(argc, argv, indicator));
+    route(indicator, parseGArgs(argc, argv, indicator));
+    
     return 0;
 }
 

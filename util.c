@@ -11,11 +11,11 @@
 
 int route(Argument *indicator, int anyOptionsGiven)
 {
-    int table;
+    int table = 0;
     
     if (anyOptionsGiven)
     {
-        ;//load table
+        table = table;//load table
     }
     
     if (strcmp(indicator[1].self, "a"))
