@@ -9,13 +9,18 @@
 #ifndef huffman_io_c
 #define huffman_io_c
 
+#include <stdio.h>
+
 typedef struct Argument
 {
     int isOption;
     const char *self;
     const char *subArg;
-} Argument;
+}   Argument;
 
 int parseGArgs(int argc, const char *argv[], Argument *indicator);
+
+unsigned long tryReadHex(char *string, int *wasHex);
+void writeHex(FILE *stream, unsigned long num);
 
 #endif
