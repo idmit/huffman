@@ -7,6 +7,7 @@
 //
 
 #include <string.h>
+#include "binheap.h"
 #include "util.h"
 
 int route(Argument *indicator, int anyOptionsGiven)
@@ -36,4 +37,16 @@ int route(Argument *indicator, int anyOptionsGiven)
     }
     
     return 0;
+}
+
+int readTable(char *filename)
+{
+    if (!filename)
+    {
+        strcpy(filename, "def_table.txt");
+    }
+    
+    // priority_queue
+    
+    return 1;
 }

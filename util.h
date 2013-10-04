@@ -12,5 +12,6 @@
 #include "io.h"
 
 int route(Argument *indicator, int anyOptionsGiven);
+int readTable(char *filename);
 
 #endif
