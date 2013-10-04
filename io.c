@@ -8,13 +8,6 @@
 
 #include "io.h"
 
-struct Argument
-{
-    int isOption;
-    const char *self;
-    const char *subArg;
-};
-
 int parseGArgs(int argc, const char *argv[], Argument *indicator)
 {
     int i           = 0,
