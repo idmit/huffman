@@ -15,12 +15,11 @@ int route(Argument *indicator, int anyOptionsGiven)
     
     if (anyOptionsGiven)
     {
-        table = table;//load table
+        table = table; //load table
     }
     
     if (strcmp(indicator[1].self, "a"))
     {
-        ;
         //huffman
     }
     else if (strcmp(indicator[1].self, "x"))

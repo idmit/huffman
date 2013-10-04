@@ -14,10 +14,20 @@
 int main(int argc, const char * argv[])
 {
     Argument *indicator = NULL;
+    int anyOptGiven    = 0,
+        argumentsGiven = 0;
     
-    indicator = (Argument *)malloc((argc - 1) * sizeof(int));
+    indicator = (Argument *)malloc((argc - 1) * sizeof(Argument));
+    argumentsGiven = argc - 1;
     
-    route(indicator, parseGArgs(argc, argv, indicator));
+    anyOptGiven = parseGArgs(argc, argv, indicator);
+    
+    if (!supportedArgsFormat(indicator, argumentsGiven, anyOptGiven))
+    {
+        return 1;
+    }
+    
+    route(indicator, anyOptGiven);
     
     return 0;
 }

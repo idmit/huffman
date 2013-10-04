@@ -13,27 +13,48 @@
 int parseGArgs(int argc, const char *argv[], Argument *indicator)
 {
     int i           = 0,
+        j = 0,
         anyOptGiven = 0;
     
-    for (i = 0; i < argc - 1; i++)
+    for (i = j = 0; i < argc - 1; i++, j++)
     {
         if (argv[i + 1][0] == '-') // i + 1 here ignores first argument (app name)
         {
-            indicator[i].isOption = 1;
-            indicator[i].self     = argv[i + 1] + 1; // + 1 here ignores '-' in option
-            indicator[i].subArg   = argv[i + 2];
+            indicator[j].isOption = 1;
+            indicator[j].self     = argv[i + 1] + 1; // + 1 here ignores '-' in option
+            indicator[j].subArg   = argv[i + 2];
             i++; // ignores subarg in next iteration
             anyOptGiven = 1;
         }
         else
         {
-            indicator[i].isOption = 0;
-            indicator[i].self     = argv[i + 1];
-            indicator[i].subArg   = 0;
+            indicator[j].isOption = 0;
+            indicator[j].self     = argv[i + 1];
+            indicator[j].subArg   = 0;
         }
     }
     
     return anyOptGiven;
+}
+
+int supportedArgsFormat(Argument *indicator, int argsGiven, int anyOptGiven)
+{
+    if (anyOptGiven)
+    {
+        if (argsGiven != 5 || indicator[0].isOption || !indicator[1].isOption || !indicator[1].subArg || indicator[2].isOption || indicator[3].isOption)
+        {
+            return 0;
+        }
+    }
+    else
+    {
+        if (argsGiven != 3 || indicator[0].isOption || indicator[1].isOption || indicator[2].isOption)
+        {
+            return 0;
+        }
+    }
+    
+    return 1;
 }
 
 unsigned long tryReadHex(char *string, int *wasHex)
