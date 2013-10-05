@@ -6,15 +6,10 @@
 //  Copyright (c) 2013 dmitrievsky. All rights reserved.
 //
 
+#include <stdlib.h>
 #include "binheap.h"
 
-typedef struct Pair
-{
-    double key; // always positive frequency
-    int data;
-} Pair;
-
-static Pair bheap[256]; // ascii codes
+static BinTree *bheap[256];
 static int heapSize = 0;
 
 int left(int i)
@@ -34,13 +29,24 @@ int parent(int i)
 
 int bubbleUp(int position)
 {
-    Pair temp;
+    BinTree *temp;
     
     temp                    = bheap[parent(position)];
     bheap[parent(position)] = bheap[position];
     bheap[position]         = temp;
     
     return  parent(position);
+}
+
+void initBH(void)
+{
+    int i = 0;
+    
+    for (i = 0; i < 256; i++)
+    {
+        bheap[i] = (BinTree *)malloc(sizeof(BinTree));
+        initBT(bheap[i], 0, 0);
+    }
 }
 
 void addBH(int data, double key)
@@ -52,10 +58,28 @@ void addBH(int data, double key)
         return;
     }
     
-    bheap[position].key  = key;
-    bheap[position].data = data;
+    initBT(bheap[position], data, key);
     
-    while (bheap[parent(position)].key > bheap[position].key)
+    while (bheap[parent(position)]->key > bheap[position]->key)
+    {
+        position = bubbleUp(position);
+    }
+    
+    heapSize++;
+}
+
+void addNodeBH(BinTree *node)
+{
+    int position = heapSize;
+    
+    if (heapSize == 256)
+    {
+        return;
+    }
+    
+    bheap[position] = node;
+    
+    while (bheap[parent(position)]->key > bheap[position]->key)
     {
         position = bubbleUp(position);
     }
@@ -67,7 +91,7 @@ int peekBH(void)
 {
     if (!heapSize) { return -1; }
     
-    return bheap[0].data;
+    return bheap[0]->data;
 }
 
 int minKey(int a, int b, int c)
@@ -76,28 +100,28 @@ int minKey(int a, int b, int c)
     int minInd = 0;
     
     minInd = a;
-    minKey = bheap[a].key;
+    minKey = bheap[a]->key;
     
     if (b < heapSize)
     {
-        minInd = bheap[b].key < minKey ? b : minInd;
-        minKey = bheap[minInd].key;
+        minInd = bheap[b]->key < minKey ? b : minInd;
+        minKey = bheap[minInd]->key;
     }
     
     if (c < heapSize)
     {
-        minInd = bheap[c].key < minKey ? c : minInd;
+        minInd = bheap[c]->key < minKey ? c : minInd;
     }
     
     return minInd;
 }
 
-int deleteMinBH(void)
+int deleteMinBH(BinTree **minimum)
 {
     int position = 0, smallest = 0;
-    Pair temp, min;
+    BinTree *temp, *min;
     
-    if (!heapSize) { return -1; }
+    if (!heapSize) { return 0; }
     
     min = bheap[0];
     bheap[0] = bheap[heapSize - 1];
@@ -105,7 +129,7 @@ int deleteMinBH(void)
     
     heapSize--;
     
-    bheap[heapSize].data = bheap[heapSize].key = 0;
+    //bheap[heapSize] = NULL;
     
     smallest = minKey(position, left(position), right(position));
     
@@ -120,5 +144,7 @@ int deleteMinBH(void)
         smallest = minKey(position, left(position), right(position));
     }
     
-    return min.data;
+    *minimum = min;
+    
+    return 1;
 }
