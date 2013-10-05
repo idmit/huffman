@@ -23,5 +23,6 @@ int supportedArgsFormat(Argument *indicator, int argsGiven, int anyOptGiven);
 
 int tryReadHex(char *string, int *wasHex, char **endOfHex);
 void writeHex(FILE *stream, unsigned long num);
+void printBinary(FILE *stream, long num);
 
 #endif
