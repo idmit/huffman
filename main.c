@@ -29,6 +29,8 @@ int main(int argc, const char * argv[])
     
     route(indicator, anyOptGiven);
     
+    free(indicator);
+    
     return 0;
 }
 
