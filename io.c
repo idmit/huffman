@@ -57,11 +57,10 @@ int supportedArgsFormat(Argument *indicator, int argsGiven, int anyOptGiven)
     return 1;
 }
 
-unsigned long tryReadHex(char *string, int *wasHex)
+int tryReadHex(char *string, int *wasHex, char **endOfHex)
 {
     unsigned long num  = 0;
     char *numberItself = NULL,
-         *endOfHex     = NULL,
          hexBegin[]    = "\\x";
     
     *wasHex = 0;
@@ -69,11 +68,11 @@ unsigned long tryReadHex(char *string, int *wasHex)
     if (strcmp(string, hexBegin))
     {
         numberItself = string + 2;
-        num = strtoul(numberItself, &endOfHex, 16);
-        if (endOfHex != numberItself) { *wasHex = 1; }
+        num = strtoul(numberItself, endOfHex, 16);
+        if (*endOfHex != numberItself) { *wasHex = 1; }
     }
     
-    return num;
+    return (int)num;
 }
 
 void writeHex(FILE *stream, unsigned long num)

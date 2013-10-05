@@ -21,7 +21,7 @@ typedef struct Argument
 int parseGArgs(int argc, const char *argv[], Argument *indicator);
 int supportedArgsFormat(Argument *indicator, int argsGiven, int anyOptGiven);
 
-unsigned long tryReadHex(char *string, int *wasHex);
+int tryReadHex(char *string, int *wasHex, char **endOfHex);
 void writeHex(FILE *stream, unsigned long num);
 
 #endif
