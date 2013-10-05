@@ -129,7 +129,9 @@ int deleteMinBH(BinTree **minimum)
     
     heapSize--;
     
-    //bheap[heapSize] = NULL;
+    bheap[heapSize] = NULL;
+    
+    if (!heapSize) { *minimum = min; return 1; }
     
     smallest = minKey(position, left(position), right(position));
     
