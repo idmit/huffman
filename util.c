@@ -8,8 +8,11 @@
 
 #include <string.h>
 #include <stdlib.h>
+#include "bintree.h"
 #include "binheap.h"
 #include "util.h"
+
+int archive(void);
 
 int route(Argument *indicator, int anyOptionsGiven)
 {
@@ -65,6 +68,8 @@ int readTable(char *tablename)
     
     line = (char *)malloc(20 * sizeof(char));
     
+    initBH();
+    
     while (fscanf(table, "%[^\n]\n", line) != EOF)
     {
         sym = tryReadHex(line, &wasHex, &endOfHex);
@@ -75,6 +80,37 @@ int readTable(char *tablename)
     free(line);
     fclose(table);
     if (defaultTable) { free(tablename); }
+    
+    return 1;
+}
+
+int archive(void)
+{
+    int i = 0;
+    BinTree *min1     = NULL,
+            *min2     = NULL,
+            *combined = NULL,
+            *code     = NULL;
+    
+    for (i = 0; i < 255; i++)
+    {
+        if (!deleteMinBH(&min1))
+        {
+            return 0;
+        }
+        if (!deleteMinBH(&min2))
+        {
+            return 0;
+        }
+        
+        combined = malloc(sizeof(BinTree));
+        initBT(combined, -1, min1->key + min2->key);
+        combined->left = min1; combined->right = min2;
+        
+        addNodeBH(combined);
+    }
+    
+    deleteMinBH(&code);
     
     return 1;
 }
