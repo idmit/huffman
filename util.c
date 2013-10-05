@@ -27,6 +27,8 @@ int route(Argument *indicator, int anyOptionsGiven)
     
     readTable(tablename);
     
+    archive();
+    
     if (strcmp(indicator[0].self, "a"))
     {
         //huffman
@@ -66,6 +68,11 @@ int readTable(char *tablename)
     
     table = fopen(tablename, "r");
     
+    if (!table)
+    {
+        return 0;
+    }
+    
     line = (char *)malloc(20 * sizeof(char));
     
     initBH();
@@ -84,6 +91,22 @@ int readTable(char *tablename)
     return 1;
 }
 
+void getPath(BinTree *tree, long *codes, long path)
+{
+    if (tree->left)
+    {
+        getPath(tree->left, codes, path << 1);
+    }
+    if (tree->right)
+    {
+        getPath(tree->right, codes, (path << 1) + 1);
+    }
+    if (!tree->left && !tree->right)
+    {
+        codes[tree->data] = path;
+    }
+}
+
 int archive(void)
 {
     int i = 0;
@@ -91,8 +114,10 @@ int archive(void)
             *min2     = NULL,
             *combined = NULL,
             *code     = NULL;
+    long codes[256],
+         path       = 0;
     
-    for (i = 0; i < 255; i++)
+    for (i = 0; i < 256; i++)
     {
         if (!deleteMinBH(&min1))
         {
@@ -111,6 +136,15 @@ int archive(void)
     }
     
     deleteMinBH(&code);
+    
+    getPath(code, codes, path);
+    
+    for (i = 0; i < 256; i++)
+    {
+        printf("%c ", i);
+        printBinary(stdout, codes[i]);
+        printf("\n");
+    }
     
     return 1;
 }
