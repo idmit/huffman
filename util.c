@@ -7,27 +7,32 @@
 //
 
 #include <string.h>
+#include <stdlib.h>
 #include "binheap.h"
 #include "util.h"
 
 int route(Argument *indicator, int anyOptionsGiven)
 {
-    int table = 0;
+    char *tablename = 0;
+    
+    tablename = NULL;
     
     if (anyOptionsGiven)
     {
-        table = table; //load table
+        tablename = (char *)indicator[1].subArg;
     }
     
-    if (strcmp(indicator[1].self, "a"))
+    readTable(tablename);
+    
+    if (strcmp(indicator[0].self, "a"))
     {
         //huffman
     }
-    else if (strcmp(indicator[1].self, "x"))
+    else if (strcmp(indicator[0].self, "x"))
     {
         
     }
-    else if (strcmp(indicator[1].self, "h"))
+    else if (strcmp(indicator[0].self, "h"))
     {
         //help
     }
@@ -39,14 +44,37 @@ int route(Argument *indicator, int anyOptionsGiven)
     return 0;
 }
 
-int readTable(char *filename)
+int readTable(char *tablename)
 {
-    if (!filename)
+    int wasHex = 0,
+        sym    = 0,
+        defaultTable = 0;
+    double freq = 0;
+    char *line     = NULL,
+         *endOfHex = NULL;
+    FILE *table = NULL;
+    
+    if (!tablename)
     {
-        strcpy(filename, "def_table.txt");
+        defaultTable = 1;
+        tablename = (char *)malloc(50 * sizeof(char));
+        strcpy(tablename, "/Users/ivan/ftable.txt");
     }
     
-    // priority_queue
+    table = fopen(tablename, "r");
+    
+    line = (char *)malloc(20 * sizeof(char));
+    
+    while (fscanf(table, "%[^\n]\n", line) != EOF)
+    {
+        sym = tryReadHex(line, &wasHex, &endOfHex);
+        freq = strtod(endOfHex, NULL);
+        addBH(sym, freq);
+    }
+    
+    free(line);
+    fclose(table);
+    if (defaultTable) { free(tablename); }
     
     return 1;
 }
