@@ -13,11 +13,12 @@
 #include "bincode.h"
 #include "util.h"
 
-int archive(void);
+int buildHuffCodes(BinCode *codes);
 
 int route(Argument *indicator, int anyOptionsGiven)
 {
     char *tablename = 0;
+    BinCode codes[256];
     
     tablename = NULL;
     
@@ -28,7 +29,7 @@ int route(Argument *indicator, int anyOptionsGiven)
     
     readTable(tablename);
     
-    archive();
+    buildHuffCodes(codes);
     
     if (strcmp(indicator[0].self, "a"))
     {
@@ -114,14 +115,13 @@ void getCodesFromTree(BinTree *tree, BinCode *codes)
     _getCodesFromTree(tree, codes, 0L, 0);
 }
 
-int archive(void)
+int buildHuffCodes(BinCode codes[256])
 {
     int i = 0;
     BinTree *min1     = NULL,
             *min2     = NULL,
             *combined = NULL,
             *huffTree     = NULL;
-    BinCode codes[256];
     
     for (i = 0; i < 256 - 1; i++)
     {
