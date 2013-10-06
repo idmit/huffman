@@ -10,6 +10,7 @@
 #define huffman_io_c
 
 #include <stdio.h>
+#include "bincode.h"
 
 typedef struct Argument
 {
@@ -23,6 +24,6 @@ int supportedArgsFormat(Argument *indicator, int argsGiven, int anyOptGiven);
 
 int tryReadHex(char *string, int *wasHex, char **endOfHex);
 void writeHex(FILE *stream, unsigned long num);
-void printBinary(FILE *stream, long num);
+void printBinaryCode(FILE *stream, BinCode code);
 
 #endif

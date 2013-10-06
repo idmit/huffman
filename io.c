@@ -80,25 +80,16 @@ void writeHex(FILE *stream, unsigned long num)
     fprintf(stream, "\\x%x", (unsigned int)num);
 }
 
-void printBinary(FILE *stream, long num)
+void printBinaryCode(FILE *stream, BinCode code)
 {
-    int i          = 0,
-        printedOne = 0,
-        bitsNum       = 0;
+    int i          = 0;
     long one = 1;
     
-    if (!num)
-    {
-        fprintf(stream, "0");
-        return;
-    }
+    one = one << (code.length - 1);
     
-    bitsNum = sizeof(long) * 8 - 1;
-    one = one << bitsNum;
-    
-    for (i = 0; i < bitsNum + 1; i++)
+    for (i = 0; i < code.length; i++)
     {
-        if (num & one) { printf("1"); printedOne = 1; } else { if (printedOne) { printf("0"); } }
-        num <<= 1;
+        if (code.self & one) { printf("1"); } else { printf("0"); }
+        code.self <<= 1;
     }
 }
