@@ -83,7 +83,9 @@ void writeHex(FILE *stream, unsigned long num)
 void printBinary(FILE *stream, long num)
 {
     int i          = 0,
-    printedOne = 0;
+        printedOne = 0,
+        bitsNum       = 0;
+    long one = 1;
     
     if (!num)
     {
@@ -91,9 +93,12 @@ void printBinary(FILE *stream, long num)
         return;
     }
     
-    for (i = 0; i < 7; i++)
+    bitsNum = sizeof(long) * 8 - 1;
+    one = one << bitsNum;
+    
+    for (i = 0; i < bitsNum + 1; i++)
     {
-        if (num & 64L) { printf("1"); printedOne = 1; } else { if (printedOne) { printf("0"); } }
+        if (num & one) { printf("1"); printedOne = 1; } else { if (printedOne) { printf("0"); } }
         num <<= 1;
     }
 }
