@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include "bintree.h"
 #include "binheap.h"
+#include "bincode.h"
 #include "util.h"
 
 int archive(void);
@@ -91,20 +92,26 @@ int readTable(char *tablename)
     return 1;
 }
 
-void getPath(BinTree *tree, long *codes, long path)
+void _getCodesFromTree(BinTree *tree, BinCode *codes, long path, int length)
 {
     if (tree->left)
     {
-        getPath(tree->left, codes, path << 1);
+        _getCodesFromTree(tree->left, codes, path << 1, length + 1);
     }
     if (tree->right)
     {
-        getPath(tree->right, codes, (path << 1) + 1);
+        _getCodesFromTree(tree->right, codes, (path << 1) + 1, length + 1);
     }
     if (!tree->left && !tree->right)
     {
-        codes[tree->data] = path;
+        codes[tree->data].self = path;
+        codes[tree->data].length = length;
     }
+}
+
+void getCodesFromTree(BinTree *tree, BinCode *codes)
+{
+    _getCodesFromTree(tree, codes, 0L, 0);
 }
 
 int archive(void)
@@ -113,9 +120,8 @@ int archive(void)
     BinTree *min1     = NULL,
             *min2     = NULL,
             *combined = NULL,
-            *code     = NULL;
-    long codes[256],
-         path       = 0;
+            *huffTree     = NULL;
+    BinCode codes[256];
     
     for (i = 0; i < 256; i++)
     {
@@ -135,14 +141,14 @@ int archive(void)
         addNodeBH(combined);
     }
     
-    deleteMinBH(&code);
+    deleteMinBH(&huffTree);
     
-    getPath(code, codes, path);
+    getCodesFromTree(huffTree, codes);
     
     for (i = 0; i < 256; i++)
     {
         printf("%c ", i);
-        printBinary(stdout, codes[i]);
+        printBinaryCode(stdout, codes[i]);
         printf("\n");
     }
     
