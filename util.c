@@ -123,7 +123,7 @@ int archive(void)
             *huffTree     = NULL;
     BinCode codes[256];
     
-    for (i = 0; i < 256; i++)
+    for (i = 0; i < 256 - 1; i++)
     {
         if (!deleteMinBH(&min1))
         {
