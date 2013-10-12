@@ -9,6 +9,8 @@
 #ifndef huffman_bincode_c
 #define huffman_bincode_c
 
+/* Binary code and its length */
+
 typedef struct BinCode
 {
     unsigned long self;

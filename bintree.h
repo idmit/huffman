@@ -9,16 +9,23 @@
 #ifndef huffman_bintree_c
 #define huffman_bintree_c
 
+/* Char code and its frequency */
+
 typedef struct BinTree
 {
     double key; // always positive frequency
-    int data;
+    int data; // char code
     struct BinTree *left;
     struct BinTree *right;
 } BinTree;
 
+/* Initialize BinTree with given args */
 int initBT(BinTree *node, int data, double key);
+
+/* Test if given node is a leaf */
 int isLeaf(BinTree *node);
+
+/* Recursively release memory occupied by node and its children */
 void releaseBT(BinTree *node);
 
 #endif

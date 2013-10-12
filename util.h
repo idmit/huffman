@@ -11,7 +11,7 @@
 
 #include "io.h"
 
+/* Choose and execute command by given args */
 int route(Argument *indicator, int anyOptionsGiven);
-int readTable(char *filename);
 
 #endif
