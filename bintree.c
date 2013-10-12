@@ -23,13 +23,15 @@ void releaseBT(BinTree *node)
     {
         return;
     }
-    if (!node->left && !node->right)
+    if (node->left)
     {
-        free(node);
-        return;
+        releaseBT(node->left);
     }
-    releaseBT(node->right);
-    releaseBT(node->left);
+    if (node->right)
+    {
+        releaseBT(node->right);
+    }
+    free(node);
 }
 
 int isLeaf(BinTree *node)

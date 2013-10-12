@@ -13,6 +13,7 @@
 #include "bincode.h"
 #include "util.h"
 
+int readTable(char *tablename);
 int buildHuffCodes(BinCode *codes, BinTree **huffTree);
 
 int route(Argument *indicator, int anyOptionsGiven)
@@ -50,7 +51,7 @@ int route(Argument *indicator, int anyOptionsGiven)
         //error;
     }
     
-    free(huffTree);
+    releaseBT(huffTree);
     
     return 0;
 }
