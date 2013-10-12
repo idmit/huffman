@@ -13,11 +13,12 @@
 #include "bincode.h"
 #include "util.h"
 
-int buildHuffCodes(BinCode *codes);
+int buildHuffCodes(BinCode *codes, BinTree **huffTree);
 
 int route(Argument *indicator, int anyOptionsGiven)
 {
     char *tablename = 0;
+    BinTree *huffTree = NULL;
     BinCode codes[256];
     
     tablename = NULL;
@@ -28,18 +29,19 @@ int route(Argument *indicator, int anyOptionsGiven)
     }
     
     readTable(tablename);
+    huffTree = malloc(sizeof(BinTree));
     
-    buildHuffCodes(codes);
+    buildHuffCodes(codes, &huffTree);
     
-    if (strcmp(indicator[0].self, "a"))
+    if (!strcmp(indicator[0].self, "a"))
     {
-        //huffman
+        archiveWithCodes(codes, indicator[anyOptionsGiven ? 2 : 1].self, indicator[anyOptionsGiven ? 3 : 2].self);
     }
-    else if (strcmp(indicator[0].self, "x"))
+    else if (!strcmp(indicator[0].self, "x"))
     {
-        
+        extractWithTree(huffTree, indicator[anyOptionsGiven ? 2 : 1].self, indicator[anyOptionsGiven ? 3 : 2].self);
     }
-    else if (strcmp(indicator[0].self, "h"))
+    else if (!strcmp(indicator[0].self, "h"))
     {
         //help
     }
@@ -47,6 +49,8 @@ int route(Argument *indicator, int anyOptionsGiven)
     {
         //error;
     }
+    
+    free(huffTree);
     
     return 0;
 }
@@ -115,13 +119,12 @@ void getCodesFromTree(BinTree *tree, BinCode *codes)
     _getCodesFromTree(tree, codes, 0L, 0);
 }
 
-int buildHuffCodes(BinCode codes[256])
+int buildHuffCodes(BinCode codes[256], BinTree **huffTree)
 {
     int i = 0;
     BinTree *min1     = NULL,
             *min2     = NULL,
-            *combined = NULL,
-            *huffTree     = NULL;
+            *combined = NULL;
     
     for (i = 0; i < 256 - 1; i++)
     {
@@ -141,9 +144,9 @@ int buildHuffCodes(BinCode codes[256])
         addNodeBH(combined);
     }
     
-    deleteMinBH(&huffTree);
+    deleteMinBH(huffTree);
     
-    getCodesFromTree(huffTree, codes);
+    getCodesFromTree(*huffTree, codes);
     
     for (i = 0; i < 256; i++)
     {
