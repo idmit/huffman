@@ -18,6 +18,7 @@ typedef struct BinTree
 } BinTree;
 
 int initBT(BinTree *node, int data, double key);
+int isLeaf(BinTree *node);
 void releaseBT(BinTree *node);
 
 #endif

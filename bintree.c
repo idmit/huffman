@@ -31,3 +31,12 @@ void releaseBT(BinTree *node)
     releaseBT(node->right);
     releaseBT(node->left);
 }
+
+int isLeaf(BinTree *node)
+{
+    if (node->right || node->left)
+    {
+        return 0;
+    }
+    return 1;
+}
