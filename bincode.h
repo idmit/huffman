@@ -11,7 +11,7 @@
 
 typedef struct BinCode
 {
-    long self;
+    unsigned long self;
     int length;
 } BinCode;
 
