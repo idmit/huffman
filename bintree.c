@@ -9,28 +9,25 @@
 #include "bintree.h"
 #include <stdlib.h>
 
-int initBT(BinTree *node, int data, double key)
+void initBT(BinTree *node, int data, double key)
 {
+    /* Children are set to NULL */
     node->left = node->right = NULL;
-    node->data = data; node->key = key;
     
-    return 1;
+    /* Applying given args */
+    node->data = data; node->key = key;
 }
 
 void releaseBT(BinTree *node)
 {
-    if (!node)
-    {
-        return;
-    }
-    if (node->left)
-    {
-        releaseBT(node->left);
-    }
-    if (node->right)
-    {
-        releaseBT(node->right);
-    }
+    /* I can't free NULL */
+    if (!node) { return; }
+    
+    /* Release children. NULL-childproof */
+    releaseBT(node->left);
+    releaseBT(node->right);
+    
+    /* Actually releasing memory */
     free(node);
 }
 
