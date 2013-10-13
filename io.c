@@ -61,11 +61,11 @@ int tryReadHex(char *string, int *wasHex, char **endOfHex)
 {
     unsigned long num  = 0;
     char *numberItself = NULL,
-         hexBegin[]    = "\\x";
+    hexBegin[]    = "\\x";
     
     *wasHex = 0;
     
-    if (strcmp(string, hexBegin))
+    if (!strncmp(string, hexBegin, 2))
     {
         numberItself = string + 2;
         num = strtoul(numberItself, endOfHex, 16);
@@ -73,6 +73,21 @@ int tryReadHex(char *string, int *wasHex, char **endOfHex)
     }
     
     return (int)num;
+}
+
+int tryReadChar(char *string, int *wasChar)
+{
+    int sym  = 0;
+
+    *wasChar = 0;
+    
+    sym = string[0];
+    if (string[1] == ' ')
+    {
+        *wasChar = 1;
+    }
+    
+    return sym;
 }
 
 void writeHex(FILE *stream, unsigned long num)

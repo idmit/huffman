@@ -29,7 +29,11 @@ int route(Argument *indicator, int anyOptionsGiven)
         tablename = (char *)indicator[1].subArg;
     }
     
-    readTable(tablename);
+    if (!readTable(tablename))
+    {
+        return 0;
+    }
+
     huffTree = malloc(sizeof(BinTree));
     
     buildHuffCodes(codes, &huffTree);
@@ -53,13 +57,14 @@ int route(Argument *indicator, int anyOptionsGiven)
     
     releaseBT(huffTree);
     
-    return 0;
+    return 1;
 }
 
 int readTable(char *tablename)
 {
-    int wasHex = 0,
-        sym    = 0,
+    int wasHex  = 0,
+        wasChar = 0,
+        sym     = 0,
         defaultTable = 0;
     double freq = 0;
     char *line     = NULL,
@@ -87,6 +92,19 @@ int readTable(char *tablename)
     while (fscanf(table, "%[^\n]\n", line) != EOF)
     {
         sym = tryReadHex(line, &wasHex, &endOfHex);
+        if (!wasHex)
+        {
+            sym = tryReadChar(line, &wasChar);
+            if (wasChar)
+            {
+                endOfHex = line + 1;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+        
         freq = strtod(endOfHex, NULL);
         addBH(sym, freq);
     }

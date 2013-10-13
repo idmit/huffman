@@ -31,6 +31,8 @@ int supportedArgsFormat(Argument *indicator, int argsGiven, int anyOptGiven);
 /* Try to read hex from string. On success set wasHex and write hex's end by given address */
 int tryReadHex(char *string, int *wasHex, char **endOfHex);
 
+int tryReadChar(char *string, int *wasChar);
+
 /* Write hex to the stream */
 void writeHex(FILE *stream, unsigned long num);
 
