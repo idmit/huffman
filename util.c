@@ -65,8 +65,9 @@ int readTable(char *tablename)
     int wasHex  = 0,
         wasChar = 0,
         sym     = 0,
-        defaultTable = 0;
-    double freq = 0;
+    defaultTable = 0,
+    totalLines = 0;
+    double freq = 0, freqs[256] = {0}, sumFreq = 0;
     char *line     = NULL,
          *endOfHex = NULL;
     FILE *table = NULL;
@@ -106,7 +107,28 @@ int readTable(char *tablename)
         }
         
         freq = strtod(endOfHex, NULL);
+        if (freqs[sym])
+        {
+            return 0;
+        }
+        freqs[sym] = freq;
+        sumFreq += freq;
+        
         addBH(sym, freq);
+        
+        totalLines += 1;
+    }
+    
+    if (totalLines < 256)
+    {
+        freq = (1 - sumFreq) / (256 - totalLines);
+        for (sym = 0; sym < 256; sym++)
+        {
+            if (!freqs[sym])
+            {
+                addBH(sym, freq);
+            }
+        }
     }
     
     free(line);
