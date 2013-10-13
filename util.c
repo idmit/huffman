@@ -25,7 +25,10 @@ static void _getCodesFromTree(BinTree *tree, BinCode *codes, long path, int leng
 /* Wrapper for recursive function with few unnecessary arguments removed */
 static void getCodesFromTree(BinTree *tree, BinCode *codes);
 
-int route(Argument *indicator, int anyOptionsGiven)
+/* Test if given arguments are supported by the command */
+static int supportedArgsFormat(Argument *indicator, int argsGiven, int anyOptGiven, int command);
+
+int route(Argument *indicator, int argumentsGiven, int anyOptionsGiven)
 {
     /* Name of file with probabilities for different chars */
     char *tableName = NULL;
@@ -56,28 +59,39 @@ int route(Argument *indicator, int anyOptionsGiven)
     }
 
     huffTree = malloc(sizeof(BinTree));
-    
-    /* Build huffTree (all probabilities are in the binary heap) and then generate codes based on the tree */
-    buildHuffCodes(codes, &huffTree);
+    initBT(huffTree, -1, 0);
     
     /* Choose what to do */
     if (!strcmp(indicator[0].self, "a"))
     {
-        /* Write all the codes corresponding to text in given input to output */
-        archiveWithCodes(codes, indicator[anyOptionsGiven ? 2 : 1].self, indicator[anyOptionsGiven ? 3 : 2].self);
+        if (supportedArgsFormat(indicator, argumentsGiven, anyOptionsGiven, 'a'))
+        {
+            /* Build huffTree (all probabilities are in the binary heap) and then generate codes based on the tree */
+            buildHuffCodes(codes, &huffTree);
+            /* Write all the codes corresponding to text in given input to output*/
+            archiveWithCodes(codes, indicator[anyOptionsGiven ? 2 : 1].self, indicator[anyOptionsGiven ? 3 : 2].self);
+        }
     }
     else if (!strcmp(indicator[0].self, "x"))
     {
-        /* Rebuild all the text corresponding to codes in given input to output */
-        extractWithTree(huffTree, indicator[anyOptionsGiven ? 2 : 1].self, indicator[anyOptionsGiven ? 3 : 2].self);
+        if (supportedArgsFormat(indicator, argumentsGiven, anyOptionsGiven, 'x'))
+        {
+            /* Build huffTree (all probabilities are in the binary heap) and then generate codes based on the tree */
+            buildHuffCodes(codes, &huffTree);
+            /* Rebuild all the text corresponding to codes in given input to output */
+            extractWithTree(huffTree, indicator[anyOptionsGiven ? 2 : 1].self, indicator[anyOptionsGiven ? 3 : 2].self);
+        }
     }
     else if (!strcmp(indicator[0].self, "h"))
     {
         /* Print out usage instructions */
-        printf("%s", "Usage:\n" //
-                     "a [-t customTable] <input> <output> -- archive <input> file into <output> file.\n" //
-                     "x [-t customTable] <input> <output> -- extract <input> file into <output> file.\n" //
-                     "h -- help and usage.\n");
+        if (supportedArgsFormat(indicator, argumentsGiven, anyOptionsGiven, 'h'))
+        {
+            printf("%s", "Usage:\n" //
+                   "a [-t customTable] <input> <output> -- archive <input> file into <output> file.\n" //
+                   "x [-t customTable] <input> <output> -- extract <input> file into <output> file.\n" //
+                   "h -- help and usage.\n");
+        }
     }
     else
     {
@@ -184,6 +198,41 @@ static int readTable(char *tablename)
     free(line);
     fclose(table);
     if (defaultTable) { free(tablename); }
+    
+    return 1;
+}
+
+int supportedArgsFormat(Argument *indicator, int argsGiven, int anyOptGiven, int command)
+{
+    switch (command)
+    {
+        case 'a':
+        case 'x':
+            if (anyOptGiven)
+            {
+                if (argsGiven != 5 || indicator[0].isOption || !indicator[1].isOption || !indicator[1].subArg || indicator[2].isOption || indicator[3].isOption)
+                {
+                    return 0;
+                }
+            }
+            else
+            {
+                if (argsGiven != 3 || indicator[0].isOption || indicator[1].isOption || indicator[2].isOption)
+                {
+                    return 0;
+                }
+            }
+            
+            break;
+        case 'h':
+            if (argsGiven != 1)
+            {
+                return 0;
+            }
+            break;
+        default:
+            break;
+    }
     
     return 1;
 }

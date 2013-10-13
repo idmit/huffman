@@ -17,17 +17,19 @@ int main(int argc, const char * argv[])
     int anyOptGiven    = 0,
         argumentsGiven = 0;
     
+    if (argc == 1)
+    {
+        /* Print out help guide */
+        printf("%s", "See <h> for usage.\n");
+        return 0;
+    }
+    
     indicator = (Argument *)malloc((argc - 1) * sizeof(Argument));
     argumentsGiven = argc - 1;
     
     anyOptGiven = parseGArgs(argc, argv, indicator);
     
-    if (!supportedArgsFormat(indicator, argumentsGiven, anyOptGiven))
-    {
-        return 1;
-    }
-    
-    route(indicator, anyOptGiven);
+    route(indicator, argumentsGiven, anyOptGiven);
     
     free(indicator);
     

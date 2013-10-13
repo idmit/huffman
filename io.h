@@ -25,9 +25,6 @@ typedef struct Argument
 /* Parse program arguments and write all the information by given address */
 int parseGArgs(int argc, const char *argv[], Argument *indicator);
 
-/* Test if given arguments are supported by the program */
-int supportedArgsFormat(Argument *indicator, int argsGiven, int anyOptGiven);
-
 /* Try to read hex from string. On success set wasHex and write hex's end by given address */
 int tryReadHex(char *string, int *wasHex, char **endOfHex);
 

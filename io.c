@@ -37,26 +37,6 @@ int parseGArgs(int argc, const char *argv[], Argument *indicator)
     return anyOptGiven;
 }
 
-int supportedArgsFormat(Argument *indicator, int argsGiven, int anyOptGiven)
-{
-    if (anyOptGiven)
-    {
-        if (argsGiven != 5 || indicator[0].isOption || !indicator[1].isOption || !indicator[1].subArg || indicator[2].isOption || indicator[3].isOption)
-        {
-            return 0;
-        }
-    }
-    else
-    {
-        if (argsGiven != 3 || indicator[0].isOption || indicator[1].isOption || indicator[2].isOption)
-        {
-            return 0;
-        }
-    }
-    
-    return 1;
-}
-
 int tryReadHex(char *string, int *wasHex, char **endOfHex)
 {
     unsigned long num  = 0;
