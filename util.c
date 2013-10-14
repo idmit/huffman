@@ -113,11 +113,17 @@ static int readTable(char *tablename)
         defaultTable = 0,
         totalLines = 0;
     double freq = 0,
+           probabiltyForUnmentioned = 0,
            freqs[256] = {0},
            sumFreq = 0;
     char *line     = NULL,
          *endOfHex = NULL;
     FILE *table = NULL;
+    
+    for (int i = 0; i < 256; i++)
+    {
+        freqs[i] = -1;
+    }
     
     /* If table name isn't provided take default table instead */
     if (!tablename)
@@ -164,7 +170,7 @@ static int readTable(char *tablename)
         freq = strtod(endOfHex, NULL);
         
         /* If there already was a line declaring <sym> probability - die. It isn't  supported. */
-        if (freqs[sym])
+        if (freqs[sym] != -1)
         {
             return 0;
         }
@@ -184,10 +190,14 @@ static int readTable(char *tablename)
     /* If some char wasn't declared in the file, then its probability is calculated like following */
     if (totalLines < 256)
     {
-        freq = (1 - sumFreq) / (256 - totalLines);
+        if (sumFreq >= 1)
+        {
+            probabiltyForUnmentioned = 0.00001;
+        }
+        freq = (1 - sumFreq + probabiltyForUnmentioned) / (256 - totalLines);
         for (sym = 0; sym < 256; sym++)
         {
-            if (!freqs[sym])
+            if (freqs[sym] == -1)
             {
                 addBH(sym, freq);
             }
